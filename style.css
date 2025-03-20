@@ -37,8 +37,9 @@ header {
     padding: 15px;
     border-radius: 10px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    width: 25%;
+    width: 100%;
     max-width: 300px;
+    margin-bottom: 20px;
 }
 
 .new-task-label {
@@ -139,4 +140,30 @@ h2 {
     border-radius: 5px;
     cursor: pointer;
     margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+    .task-columns {
+        flex-direction: column;
+    }
+
+    .column {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .new-task {
+        width: 100%;
+        max-width: none;
+    }
+}
+
+@media (min-width: 769px) {
+    .task-columns {
+        flex-direction: row;
+    }
+
+    .column {
+        width: 25%;
+    }
 }
