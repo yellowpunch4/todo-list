@@ -1,0 +1,142 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #e9f0fa;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+header {
+    background: #1e88e5;
+    color: white;
+    padding: 6px 20px;
+    text-align: left;
+    font-size: 16px;
+    font-weight: bold;
+    width: 100%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding-left: 38%;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.new-task {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    width: 25%;
+    max-width: 300px;
+}
+
+.new-task-label {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+
+.input-container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.new-task input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.new-task button {
+    background: #1e88e5;
+    color: white;
+    border: none;
+    padding: 10px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.task-columns {
+    display: flex;
+    gap: 15px;
+    justify-content: space-between;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.column {
+    flex: 1;
+    background: transparent;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: none;
+}
+
+h2 {
+    text-align: left;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-bottom: 10px;
+    display: inline-block;
+    width: auto;
+    color: white;
+}
+
+.backlog h2 { background: #cfd8dc; color: #546e7a; }
+.in-progress h2 { background: #90caf9; color: #1976d2; }
+.done h2 { background: #a5d6a7; color: #388e3c; }
+.trash h2 { background: #ffcccb; color: #c62828; }
+
+.task {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.7);
+    padding: 15px;
+    margin: 5px 0;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd;
+    font-size: 14px;
+    position: relative;
+}
+
+.task::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 5px;
+    border-radius: 5px 0 0 5px;
+}
+
+.backlog .task::before { background: #cfd8dc; }
+.in-progress .task::before { background: #90caf9; }
+.done .task::before { background: #a5d6a7; }
+.trash .task::before { background: #ffcccb; }
+
+.clear-btn {
+    background: #d32f2f;
+    color: white;
+    border: none;
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
