@@ -74,9 +74,9 @@ header {
 .task-columns {
     display: flex;
     gap: 15px;
-    justify-content: space-between;
+    justify-content: center;
     margin-top: 20px;
-    width: 100%;
+    width: 90%;
 }
 
 .column {
@@ -202,5 +202,3 @@ h2 {
         max-width: none;
     }
 }
-
-
