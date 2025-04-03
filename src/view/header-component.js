@@ -19,4 +19,4 @@ export default class HeaderComponent {
   removeElement() {
     this.element = null;
   }
-}
+} 

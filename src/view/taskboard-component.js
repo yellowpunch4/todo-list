@@ -19,4 +19,4 @@ export default class TaskBoardComponent {
   removeElement() {
     this.element = null;
   }
-}
+} 

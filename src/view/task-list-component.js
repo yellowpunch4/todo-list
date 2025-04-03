@@ -1,36 +1,42 @@
 import { createElement } from '../framework/render.js';
 
-
-function createTaskListComponentTemplate() {
-  return `<div class="column backlog">
-            <h2>Название блока</h2>
-            <div class="task-list"></div>
-          </div>`;
+function createTaskListComponentTemplate(title, status) {
+  const clearButton = status === "basket" ? `<button class="clear-btn">Очистить</button>`:'';
+  return `
+    <div class="column ${status}">
+      <h2 class="column__title ${status}">${title}</h2>
+      <div class="task-list ${status}"></div>
+      ${clearButton}
+    </div>
+  `;
 }
 
-export default class TaskListComponent {
-  constructor() {
-    this.tasks = [];
+export default class TasksListComponent {
+  #element = null;
+  #title = '';
+  #status = '';
+
+  constructor({ title, status }) {
+    this.#title = title;
+    this.#status = status;
   }
 
   getTemplate() {
-    return createTaskListComponentTemplate();
+    return createTaskListComponentTemplate(this.#title, this.#status);
   }
 
   getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+    if (!this.#element) {
+      this.#element = createElement(this.getTemplate());
     }
-    return this.element;
+    return this.#element;
   }
 
-  addTask(taskText) {
-    const task = new TaskComponent(taskText);
-    this.tasks.push(task);
-    this.getElement().querySelector('.task-list').appendChild(task.getElement());
+  getTaskContainer() {
+    return this.getElement().querySelector('.task-list');
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }

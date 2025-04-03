@@ -103,7 +103,7 @@ h2 {
     color: #546e7a;
 }
 
-.in-progress h2 {
+.processing h2 {
     background: #90caf9;
     color: #1976d2;
 }
@@ -113,7 +113,7 @@ h2 {
     color: #388e3c;
 }
 
-.trash h2 {
+.basket h2 {
     background: #ffcccb;
     color: #c62828;
 }
@@ -145,7 +145,7 @@ h2 {
     background: #cfd8dc;
 }
 
-.in-progress .task::before {
+.processing .task::before {
     background: #90caf9;
 }
 
@@ -153,7 +153,7 @@ h2 {
     background: #a5d6a7;
 }
 
-.trash .task::before {
+.basket .task::before {
     background: #ffcccb;
 }
 
@@ -202,3 +202,5 @@ h2 {
         max-width: none;
     }
 }
+
+

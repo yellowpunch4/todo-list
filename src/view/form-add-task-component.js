@@ -29,4 +29,4 @@ export default class FormAddTaskComponent {
   removeElement() {
     this.element = null;
   }
-}
+} 
