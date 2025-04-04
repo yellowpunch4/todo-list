@@ -1,12 +1,10 @@
 import { createElement } from '../framework/render.js';
 
 function createTaskListComponentTemplate(title, status) {
-  const clearButton = status === "basket" ? `<button class="clear-btn">Очистить</button>`:'';
   return `
     <div class="column ${status}">
       <h2 class="column__title ${status}">${title}</h2>
       <div class="task-list ${status}"></div>
-      ${clearButton}
     </div>
   `;
 }
