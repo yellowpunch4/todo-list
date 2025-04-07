@@ -202,3 +202,18 @@ h2 {
         max-width: none;
     }
 }
+.no-tasks {
+    color: rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    margin: 10px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: rgba(0, 0, 0, 0.2);
+}
+
+
