@@ -1,3 +1,4 @@
+import { AbstractComponent } from '../framework/view/abstarct-component.js';
 import { createElement } from '../framework/render.js';
 
 function createTaskComponentTemplate(task) {
@@ -10,36 +11,28 @@ function createTaskComponentTemplate(task) {
       </div>
       <button aria-label="Изменить" class="task-edit" type="button"></button>
       <button aria-label="Удалить" class="task-delete" type="button"></button>
-      
     </li>
   `;
 }
 
-export default class TaskComponent {
-  #element = null;
+export default class TaskComponent extends AbstractComponent {
   #task = null;
 
   constructor({ task }) { 
+    super();
     this.#task = task;
+    this.#initListeners();
   }
 
-  getTemplate() {
+  get template() {
     return createTaskComponentTemplate(this.#task);
   }
 
-  getElement() {
-    if (!this.#element) {
-      this.#element = createElement(this.getTemplate());
-      this.#initListeners();
-    }
-    return this.#element;
-  }
-
   #initListeners() {
-    const editButton = this.#element.querySelector('.task-edit');
-    const deleteButton = this.#element.querySelector('.task-delete');
-    const taskView = this.#element.querySelector('.task-view');
-    const taskInput = this.#element.querySelector('.task-input');
+    const editButton = this.element.querySelector('.task-edit');
+    const deleteButton = this.element.querySelector('.task-delete');
+    const taskView = this.element.querySelector('.task-view');
+    const taskInput = this.element.querySelector('.task-input');
 
     editButton.addEventListener('click', () => {
       taskView.style.display = 'none';
@@ -55,11 +48,11 @@ export default class TaskComponent {
     });
 
     deleteButton.addEventListener('click', () => {
-      this.#element.remove();
+      this.element.remove();
     });
   }
 
   removeElement() {
-    this.#element = null;
+    super.removeElement();
   }
 }

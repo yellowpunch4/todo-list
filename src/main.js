@@ -5,11 +5,13 @@ import { render, RenderPosition } from './framework/render.js';
 import TaskBoardComponent from './view/taskboard-component.js';
 import TasksModel from './model/task-model.js';
 
+
+
 const bodyContainer = document.querySelector('body');
 const headerComponent = new HeaderComponent();
 const formAddTaskComponent = new FormAddTaskComponent();
 const taskBoardComponent = new TaskBoardComponent();
-const boardElement = taskBoardComponent.getElement();
+const boardElement = taskBoardComponent.element;
 
 const tasksModel = new TasksModel();
 const taskBoardPresenter = new TaskBoardPresenter({
