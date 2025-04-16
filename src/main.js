@@ -9,7 +9,9 @@ import TasksModel from './model/task-model.js';
 
 const bodyContainer = document.querySelector('body');
 const headerComponent = new HeaderComponent();
-const formAddTaskComponent = new FormAddTaskComponent();
+const formAddTaskComponent = new FormAddTaskComponent({
+    onClick: handleNewTaskButtonClick
+});
 const taskBoardComponent = new TaskBoardComponent();
 const boardElement = taskBoardComponent.element;
 
@@ -19,6 +21,10 @@ const taskBoardPresenter = new TaskBoardPresenter({
     tasksModel,
 });
 
+function handleNewTaskButtonClick()
+{
+    taskBoardPresenter.createTask();
+}
 render(headerComponent, bodyContainer, RenderPosition.AFTERBEGIN);
 render(formAddTaskComponent, bodyContainer);
 render(taskBoardComponent, bodyContainer);

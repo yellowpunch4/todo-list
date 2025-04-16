@@ -15,6 +15,8 @@ export default class TaskBoardPresenter {
   constructor({ boardContainer, tasksModel }) {
     this.#boardContainer = boardContainer;
     this.#tasksModel = tasksModel;
+
+    this.#tasksModel.addObserver(this.#handleModelChange.bind(this));
   }
 
   init() {
@@ -51,23 +53,34 @@ export default class TaskBoardPresenter {
       });
     }
 
-    return tasksListComponent.element;
-  }
+    if (status === Status.BASKET) {
+      this.#renderDeleteComponent(tasksListComponent.element);
+    }
 
-  #renderBasketList() {
-    const basketContainer = this.#renderTasksList(Status.BASKET);
-    this.#renderDeleteComponent(basketContainer);
+    return tasksListComponent.element;
   }
 
   #renderBoard() {
     render(this.#tasksBoardComponent, this.#boardContainer);
 
     Object.values(Status).forEach((status) => {
-      if (status === Status.BASKET) {
-        this.#renderBasketList();
-      } else {
-        this.#renderTasksList(status);
-      }
+      this.#renderTasksList(status);
     });
+  }
+
+  createTask() {
+    const title = prompt("Введите название задачи:"); // временно, для теста
+    if (title) {
+      this.#tasksModel.addTask(title);
+    }
+  }
+
+  #handleModelChange() {
+    this.#clearBoard();
+    this.#renderBoard();
+  }
+
+  #clearBoard() {
+    this.#tasksBoardComponent.element.innerHTML = '';
   }
 }
