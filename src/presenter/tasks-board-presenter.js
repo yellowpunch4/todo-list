@@ -30,9 +30,16 @@ export default class TaskBoardPresenter {
   }
 
   #renderDeleteComponent(container) {
-    const deleteComponent = new DeleteComponent();
+    const deleteComponent = new DeleteComponent({
+      onClick: () => this.#handleDeleteTasksFromBasket()
+    });
     render(deleteComponent, container);
   }
+  
+  #handleDeleteTasksFromBasket() {
+    this.#tasksModel.deleteTasksByStatus(Status.BASKET);
+  }
+  
 
   #renderTasksList(status) {
     const tasksListComponent = new TasksListComponent({
@@ -42,7 +49,7 @@ export default class TaskBoardPresenter {
 
     render(tasksListComponent, this.#tasksBoardComponent.element);
 
-    const tasksForStatus = this.#boardTasks.filter((task) => task.status === status);
+    const tasksForStatus = this.tasks.filter((task) => task.status === status);
 
     if (tasksForStatus.length === 0) {
       const noTasksComponent = new NoTasksComponent();
@@ -69,11 +76,13 @@ export default class TaskBoardPresenter {
   }
 
   createTask() {
-    const title = prompt("Введите название задачи:"); // временно, для теста
-    if (title) {
-      this.#tasksModel.addTask(title);
-    }
+    const taskTitle = document.querySelector('#add-task').value.trim();
+    if (!taskTitle)
+    {return;}
+    this.#tasksModel.addTask(taskTitle);
+    document.querySelector('#add-task').value ='';
   }
+
 
   #handleModelChange() {
     this.#clearBoard();
@@ -82,5 +91,9 @@ export default class TaskBoardPresenter {
 
   #clearBoard() {
     this.#tasksBoardComponent.element.innerHTML = '';
+  }
+  get tasks()
+  {
+    return this.#tasksModel.tasks;
   }
 }

@@ -39,4 +39,10 @@ export default class TasksModel {
     {
         this.#observers.forEach((observer) => observer());
     }
+
+    deleteTasksByStatus(status) {
+        this.#boardtasks = this.#boardtasks.filter((task) => task.status !== status);
+        this._notifyObservers();
+      }
+      
 }
