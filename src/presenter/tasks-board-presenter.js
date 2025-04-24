@@ -25,9 +25,17 @@ export default class TaskBoardPresenter {
   }
 
   #renderTask(task, container) {
-    const taskComponent = new TaskComponent({ task });
+    const taskComponent = new TaskComponent({ 
+      task, 
+      onTaskDropInside: this.#handleTaskDropInside.bind(this) 
+    });
     render(taskComponent, container);
   }
+  #handleTaskDropInside(taskId, targetTaskId) {
+    this.#tasksModel.moveTaskBefore(taskId, targetTaskId);
+  }
+  
+  
 
   #renderDeleteComponent(container) {
     const deleteComponent = new DeleteComponent({
@@ -39,12 +47,12 @@ export default class TaskBoardPresenter {
   #handleDeleteTasksFromBasket() {
     this.#tasksModel.deleteTasksByStatus(Status.BASKET);
   }
-  
 
   #renderTasksList(status) {
     const tasksListComponent = new TasksListComponent({
       title: StatusLabel[status],
       status,
+      onTaskDrop: this.#handleTaskDrop.bind(this)
     });
 
     render(tasksListComponent, this.#tasksBoardComponent.element);
@@ -53,15 +61,15 @@ export default class TaskBoardPresenter {
 
     if (tasksForStatus.length === 0) {
       const noTasksComponent = new NoTasksComponent();
-      render(noTasksComponent, tasksListComponent.element);
+      render(noTasksComponent, tasksListComponent.getTaskContainer());
     } else {
       tasksForStatus.forEach((task) => {
-        this.#renderTask(task, tasksListComponent.element);
+        this.#renderTask(task, tasksListComponent.getTaskContainer());
       });
     }
 
     if (status === Status.BASKET) {
-      this.#renderDeleteComponent(tasksListComponent.element);
+      this.#renderDeleteComponent(tasksListComponent.getTaskContainer());
     }
 
     return tasksListComponent.element;
@@ -77,12 +85,16 @@ export default class TaskBoardPresenter {
 
   createTask() {
     const taskTitle = document.querySelector('#add-task').value.trim();
-    if (!taskTitle)
-    {return;}
+    if (!taskTitle) {
+      return;
+    }
     this.#tasksModel.addTask(taskTitle);
-    document.querySelector('#add-task').value ='';
+    document.querySelector('#add-task').value = '';
   }
 
+  #handleTaskDrop(taskId, newStatus) {
+    this.#tasksModel.updateTaskStatus(taskId, newStatus);
+  }
 
   #handleModelChange() {
     this.#clearBoard();
@@ -92,8 +104,8 @@ export default class TaskBoardPresenter {
   #clearBoard() {
     this.#tasksBoardComponent.element.innerHTML = '';
   }
-  get tasks()
-  {
+
+  get tasks() {
     return this.#tasksModel.tasks;
   }
 }
