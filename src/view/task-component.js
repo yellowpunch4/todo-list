@@ -17,11 +17,16 @@ function createTaskComponentTemplate(task) {
 
 export default class TaskComponent extends AbstractComponent {
   #task = null;
+  #onTaskDropInside = null;
 
-  constructor({ task }) { 
+  constructor({ task, onTaskDropInside }) { 
     super();
     this.#task = task;
+    this.#onTaskDropInside = onTaskDropInside;
+
     this.#initListeners();
+    this.#makeTaskDraggable(); 
+    this.#initDropTarget();
   }
 
   get template() {
@@ -49,6 +54,35 @@ export default class TaskComponent extends AbstractComponent {
 
     deleteButton.addEventListener('click', () => {
       this.element.remove();
+    });
+  }
+
+  #makeTaskDraggable() {
+    this.element.setAttribute('draggable', true);
+    this.element.addEventListener('dragstart', (event) => {
+      event.dataTransfer.setData('text/plain', this.#task.id);
+    });
+  }
+
+  #initDropTarget() {
+    this.element.addEventListener('dragover', (event) => {
+      event.preventDefault();
+      this.element.classList.add('drag-over');
+    });
+
+    this.element.addEventListener('dragleave', () => {
+      this.element.classList.remove('drag-over');
+    });
+
+    this.element.addEventListener('drop', (event) => {
+      event.preventDefault();
+      this.element.classList.remove('drag-over');
+
+      const draggedTaskId = event.dataTransfer.getData('text/plain');
+
+      if (this.#onTaskDropInside && draggedTaskId !== this.#task.id) {
+        this.#onTaskDropInside(draggedTaskId, this.#task.id);
+      }
     });
   }
 
