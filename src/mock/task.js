@@ -1,4 +1,5 @@
-export const tasks = [
+export const tasks = 
+[
     { 
         id: "1",
         title: "Выучить JS",

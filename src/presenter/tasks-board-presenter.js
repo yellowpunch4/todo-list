@@ -19,10 +19,12 @@ export default class TaskBoardPresenter {
     this.#tasksModel.addObserver(this.#handleModelChange.bind(this));
   }
 
-  init() {
-    this.#boardTasks = [...this.#tasksModel.tasks];
+  async init() {
+    await this.#tasksModel.init();
+    this.#clearBoard();
     this.#renderBoard();
-  }
+}
+
 
   #renderTask(task, container) {
     const taskComponent = new TaskComponent({ 
