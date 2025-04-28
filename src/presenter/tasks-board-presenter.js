@@ -1,13 +1,17 @@
 import NoTasksComponent from '../view/no-tasks-component.js';
+import LoadingViewComponent from '../view/LoadingViewComponent.js';
 import TasksListComponent from '../view/task-list-component.js';
 import TaskComponent from '../view/task-component.js';
 import TaskBoardComponent from '../view/taskboard-component.js';
 import { StatusLabel, Status } from '../const.js';
 import DeleteComponent from '../view/delete-button-component.js';
 import { render } from '../framework/render.js';
+import { remove } from '../framework/render.js';
 
 export default class TaskBoardPresenter {
   #boardContainer = null;
+  #loadingComponent = new LoadingViewComponent();
+  #isLoading = true;
   #tasksModel = null;
   #boardTasks = [];
   #tasksBoardComponent = new TaskBoardComponent();
@@ -19,10 +23,16 @@ export default class TaskBoardPresenter {
     this.#tasksModel.addObserver(this.#handleModelChange.bind(this));
   }
 
-  init() {
-    this.#boardTasks = [...this.#tasksModel.tasks];
+  async init() {
+    render(this.#loadingComponent, this.#boardContainer);
+    await this.#tasksModel.init();
+    this.#isLoading = false;
+    remove(this.#loadingComponent);
+
+    this.#clearBoard();
     this.#renderBoard();
-  }
+}
+
 
   #renderTask(task, container) {
     const taskComponent = new TaskComponent({ 
@@ -42,11 +52,17 @@ export default class TaskBoardPresenter {
       onClick: () => this.#handleDeleteTasksFromBasket()
     });
     render(deleteComponent, container);
-  }
+}
   
-  #handleDeleteTasksFromBasket() {
-    this.#tasksModel.deleteTasksByStatus(Status.BASKET);
-  }
+  async #handleDeleteTasksFromBasket() {
+    try {
+        await this.#tasksModel.clearBasketTasks();
+    } catch (err) {
+        console.error('Ошибка при очистке корзины:', err);
+    }
+}
+
+
 
   #renderTasksList(status) {
     const tasksListComponent = new TasksListComponent({
@@ -83,18 +99,27 @@ export default class TaskBoardPresenter {
     });
   }
 
-  createTask() {
+async createTask() {
     const taskTitle = document.querySelector('#add-task').value.trim();
     if (!taskTitle) {
-      return;
+        return;
     }
-    this.#tasksModel.addTask(taskTitle);
-    document.querySelector('#add-task').value = '';
-  }
+    try {
+        await this.#tasksModel.addTask(taskTitle);
+        document.querySelector('#add-task').value = '';
+    } catch (err) {
+        console.error('Ошибка при создании задачи:', err);
+    }
+}
 
-  #handleTaskDrop(taskId, newStatus) {
-    this.#tasksModel.updateTaskStatus(taskId, newStatus);
+
+async #handleTaskDrop(taskId, newStatus) {
+  try {
+      await this.#tasksModel.updateTaskStatus(taskId, newStatus);
+  } catch (err) {
+      console.error('Ошибка при обновлении статуса задачи:', err);
   }
+}
 
   #handleModelChange() {
     this.#clearBoard();
