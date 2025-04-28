@@ -1,6 +1,6 @@
-import { Observable } from '../framework/observable.js';
+import {Observable} from '../framework/observable.js';
 import { generateID } from '../utils.js';
-import { UpdateType } from '../const.js';
+import { UpdateType, UserAction } from '../const.js';
 
 export default class TasksModel extends Observable {
     #tasksApiService = null;
@@ -48,10 +48,11 @@ export default class TasksModel extends Observable {
         try {
             const createdTask = await this.#tasksApiService.addTask(newTask);
             this.#boardtasks.push(createdTask);
-            this._notify(UpdateType.MINOR);
+            this._notify(UserAction.ADD_TASK, createdTask);
             return createdTask;
         } catch (err) {
-            console.error('Ошибка при добавлении задачи:', err);
+            console.error('Ошибка при добавлении задачи на сервер:', err);
+            throw err;
         }
     }
 
@@ -65,17 +66,43 @@ export default class TasksModel extends Observable {
             console.error('Ошибка при удалении задач:', err);
         }
     }
+    deleteTask(taskId) {
+        this.#boardtasks = this.#boardtasks.filter(task => task.id !== taskId);
+        this._notify(UserAction.DELETE_TASK, { id: taskId });
+    }
+    
+    async clearBasketTasks() {
+        const basketTasks = this.#boardtasks.filter(task => task.status === 'basket');
+    
+        try {
+            await Promise.all(basketTasks.map(task => this.#tasksApiService.deleteTask(task.id)));
+            this.#boardtasks = this.#boardtasks.filter(task => task.status !== 'basket');
+            this._notify(UserAction.DELETE_TASK, { status: 'basket' });
+        } catch (err) {
+            console.error('Ошибка при удалении задач из корзины на сервере:', err);
+            throw err;
+        }
+    }
+    
+    hasBasketTasks() {
+        return this.#boardtasks.some(task => task.status === 'basket');
+    }
+    
 
     async updateTaskStatus(taskId, newStatus) {
         const task = this.#boardtasks.find(task => task.id === taskId);
         if (task) {
+            const previousStatus = task.status;
+            task.status = newStatus;
+    
             try {
-                const updatedTask = { ...task, status: newStatus };
-                await this.#tasksApiService.updateTask(updatedTask);
-                task.status = newStatus;
-                this._notify(UpdateType.PATCH);
+                const updatedTask = await this.#tasksApiService.updateTask(task);
+                Object.assign(task, updatedTask);
+                this._notify(UserAction.UPDATE_TASK, task);
             } catch (err) {
-                console.error('Ошибка при обновлении задачи:', err);
+                console.error('Ошибка при обновлении статуса задачи на сервере:', err);
+                task.status = previousStatus;
+                throw err;
             }
         }
     }

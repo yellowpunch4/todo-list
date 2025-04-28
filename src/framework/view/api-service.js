@@ -1,4 +1,4 @@
-export default class ApiService {
+export class ApiService {
  
    constructor(endPoint) {
      this._endPoint = endPoint;
