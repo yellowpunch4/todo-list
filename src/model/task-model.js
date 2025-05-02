@@ -11,7 +11,6 @@ export default class TasksModel extends Observable {
         this.#tasksApiService = tasksApiService;
         this.#tasksApiService.tasks.then((tasks) => {
             this.#boardtasks = tasks;
-            console.log('Loaded tasks:', tasks);
         });
     }
 
